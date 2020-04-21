@@ -11,12 +11,18 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
-    height: 800,
+    //  maxWidth:,
+    // height: 750,
+    flexGrow: 1,
   },
   media: {
-    height: 540,
+    // width: '100%',
+    height: 400,
   },
+//   item: {
+//     // padding: theme.spacing(1),
+//     alignContent: 'center',
+//   },
 });
 
 export default function MediaCard({product}) {
@@ -30,28 +36,37 @@ export default function MediaCard({product}) {
           image={"data/products/"+product.sku+"_1.jpg"}
         />
         <CardContent>
-            <Typography gutterBottom variant='subtitle1' component="p">
+            <Typography gutterBottom variant='subtitle1' component="p" align="center">
                          {product.title}
             </Typography>
-            <Typography variant="h6" color="textSecondary" component="p">
+            <Typography variant="h6" color="textSecondary" component="p" align="center">
                          $ {product.price}
             </Typography>
           
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
-          S
-        </Button>
-        <Button size="small" color="primary">
-          M
-        </Button>
-        <Button size="small" color="primary">
-          L
-        </Button>
-        <Button size="small" color="primary">
-          XL
-        </Button>
+        <Grid container justify="center">
+                <Button size="small" color="primary">
+                S
+                </Button>
+                <Button size="small" color="primary">
+                M
+                </Button>
+                <Button size="small" color="primary">
+                L
+                </Button>
+                <Button size="small" color="primary">
+                XL
+                </Button>
+
+        <Grid container justify="center" >
+                <Button variant="contained" color="primary" disableElevation centered={true}>
+                ADD TO CART
+                </Button>
+            </Grid>
+        </Grid>
+        
         {/* <Grid container justify="center"> */}
         {/* <Button size="small" variant="outlined" color="primary">
             Add to cart
