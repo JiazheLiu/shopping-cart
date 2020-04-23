@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -25,8 +25,34 @@ const useStyles = makeStyles({
 //   },
 });
 
-export default function MediaCard({product}) {
+
+export default function MediaCard({product, cartList, setCartList}) {
   const classes = useStyles();
+  const [productSize, setProductSize] = useState('S');
+  
+  const handleSizeClick = (size) => {
+    // setClick(true);
+    setProductSize(size);
+    // console.log(productSize);
+};
+  const handleAddCart = () => {
+    // setCartOpen(true);
+    let tempCart = cartList.slice(0);
+    let count;
+    for(count = 0; count < tempCart.length; count++){
+        if (tempCart[count].product.sku === product.sku && tempCart[count].size === productSize) {
+            tempCart[count].qty += 1;
+            break;
+        }
+    }
+    if(count===tempCart.length){
+        tempCart.push({product : product, qty : 1, size : productSize});
+    }
+    
+    setCartList(tempCart);
+    // setClick(false);
+};
+
 
   return (
     <Card className={classes.root}>
@@ -47,21 +73,21 @@ export default function MediaCard({product}) {
       </CardActionArea>
       <CardActions>
         <Grid container justify="center">
-                <Button size="small" color="primary">
+                <Button size="small" color="primary" onClick={() => handleSizeClick('S')}>
                 S
                 </Button>
-                <Button size="small" color="primary">
+                <Button size="small" color="primary" onClick={() => handleSizeClick('M')}>
                 M
                 </Button>
-                <Button size="small" color="primary">
+                <Button size="small" color="primary" onClick={() => handleSizeClick('L')}>
                 L
                 </Button>
-                <Button size="small" color="primary">
+                <Button size="small" color="primary" onClick={() => handleSizeClick('XL')}>
                 XL
                 </Button>
 
         <Grid container justify="center" >
-                <Button variant="contained" color="primary" disableElevation centered={true}>
+                <Button variant="contained" color="primary" disableElevation centered={true} onClick={handleAddCart}>
                 ADD TO CART
                 </Button>
             </Grid>

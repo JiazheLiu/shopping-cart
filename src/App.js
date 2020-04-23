@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import CardList from "./components/CardList";
+import ShoppingCart from "./components/ShoppingCart";
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Container from '@material-ui/core/Container';
 
@@ -89,6 +84,7 @@ const App = () => {
   const theme = useTheme();
   const products = Object.values(data);
   const [open, setOpen] = React.useState(false);
+  const [cartList, setCartList] = useState([]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -97,7 +93,14 @@ const App = () => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+  const totalAmount = (cartList) => {
+    let count;
+    let sum = 0;
+    for(count = 0; count < cartList.length; count++){
+        sum += cartList[count].product.price * cartList[count].qty;
+    }
+    return sum;
+};
   useEffect(() => {
     const fetchProducts = async () => {
       const response = await fetch('./data/products.json');
@@ -140,7 +143,7 @@ const App = () => {
       >
         <div className={classes.drawerHeader} />
         <React.Fragment>
-          <CardList products={products}/>
+          <CardList products={products} cartList={cartList} setCartList={setCartList}/>
         </React.Fragment>
     </main>
     <Drawer
@@ -158,17 +161,13 @@ const App = () => {
           </IconButton>
         </div>
         <Divider />
-        <List>
-          <ListItem>
-          <Typography variant="h6" noWrap className={classes.title}>
-            
-          </Typography>
-          </ListItem>
-        </List>
+        <React.Fragment>
+            <ShoppingCart cartList={cartList} setCartList={setCartList}/>
+        </React.Fragment>
         <Divider />
         <Container fixed>
         <Typography align="left" variant="h6" noWrap>
-            Total $ :
+            Total $ : {totalAmount(cartList)}
           </Typography>
         </Container>
       </Drawer> 
