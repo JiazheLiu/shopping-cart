@@ -21,9 +21,9 @@ const useStyles = makeStyles({
         flexDirection: 'column',
     },
     image:{
-        padding: 5,
+        padding: 8,
         flex: '1 0 auto',
-        maxWidth: 40,
+        maxWidth: 60,
         margin: '5px 5px',
     },
     clearButton:{
@@ -33,7 +33,43 @@ const useStyles = makeStyles({
 
 export default function CartList({cartList, setCartList}) {
     const classes = useStyles();
-
+    const Delete = (deleteItem, deleteSize) => {
+        var temp = cartList.slice(0);
+        for(var i = 0; i < temp.length; i++){
+            if(temp[i].product.sku == deleteItem && temp[i].size == deleteSize){
+                temp.splice(i,1);
+                setCartList(temp);
+                break;
+            }
+        }
+    }
+    const Add = (deleteItem, deleteSize) => {
+        var temp = cartList.slice(0);
+        for(var i = 0; i < temp.length; i++){
+            if(temp[i].product.sku == deleteItem && temp[i].size == deleteSize){
+                temp[i].qty += 1;
+                setCartList(temp);
+                break;
+            }
+        }
+    }
+    const Sub = (deleteItem, deleteSize) => {
+        var temp = cartList.slice(0);
+        for(var i = 0; i < temp.length; i++){
+            if(temp[i].product.sku == deleteItem && temp[i].size == deleteSize){
+                if (temp[i].qty > 1){
+                    temp[i].qty -= 1;
+                    setCartList(temp);
+                    break;
+                }
+                else{
+                    temp.splice(i,1);
+                    setCartList(temp);
+                    break;
+                }
+            }
+        }
+    }
     return (
         <Container maxWidth="lg">
             {cartList.map(item =>
@@ -48,22 +84,22 @@ export default function CartList({cartList, setCartList}) {
                             {item.product.title}
                         </Typography>
                         <Typography variant="subtitle2">
-                            size: {item.size}
+                            SIZE: {item.size}
                         </Typography>
                         <Typography variant="h6">
                             $ {item.product.price}
                         </Typography>
                         <Typography variant="subtitle2">
-                            <IconButton aria-label="remove" size={"small"}>
+                            <IconButton color={"primary"} aria-label="remove" size={"small"} onClick={() => Sub(item.product.sku, item.size)}>
                                 <RemoveCircleOutlineIcon />
                             </IconButton>
                             Item: {item.qty}
-                            <IconButton aria-label="add" size={"small"}>
+                            <IconButton color={"primary"} aria-label="add" size={"small"} onClick={() => Add(item.product.sku, item.size)}>
                                 <AddCircleOutlineIcon />
                             </IconButton>
                         </Typography>
                     </CardContent>
-                    <IconButton aria-label="clear" size={"small"} className={classes.clearButton}>
+                    <IconButton color={"primary"} aria-label="clear" size={"small"} className={classes.clearButton} onClick={() => Delete(item.product.sku, item.size)}>
                         <DeleteIcon/>
                     </IconButton>
                 </Card>

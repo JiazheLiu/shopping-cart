@@ -31,12 +31,9 @@ export default function MediaCard({product, cartList, setCartList}) {
   const [productSize, setProductSize] = useState('S');
   
   const handleSizeClick = (size) => {
-    // setClick(true);
     setProductSize(size);
-    // console.log(productSize);
 };
   const handleAddCart = () => {
-    // setCartOpen(true);
     let tempCart = cartList.slice(0);
     let count;
     for(count = 0; count < tempCart.length; count++){
@@ -48,9 +45,7 @@ export default function MediaCard({product, cartList, setCartList}) {
     if(count===tempCart.length){
         tempCart.push({product : product, qty : 1, size : productSize});
     }
-    
     setCartList(tempCart);
-    // setClick(false);
 };
 
 

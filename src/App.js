@@ -99,6 +99,7 @@ const App = () => {
     for(count = 0; count < cartList.length; count++){
         sum += cartList[count].product.price * cartList[count].qty;
     }
+    sum = sum.toFixed(2);
     return sum;
 };
   useEffect(() => {
