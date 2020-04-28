@@ -31,38 +31,42 @@ const useStyles = makeStyles({
     }
 });
 
-export default function CartList({cartList, setCartList}) {
+export default function CartList({cartList, setCartList, inventory}) {
     const classes = useStyles();
     const Delete = (deleteItem, deleteSize) => {
         var temp = cartList.slice(0);
         for(var i = 0; i < temp.length; i++){
             if(temp[i].product.sku == deleteItem && temp[i].size == deleteSize){
+                inventory[deleteItem][temp[i].size] += temp[i].qty;
                 temp.splice(i,1);
                 setCartList(temp);
                 break;
             }
         }
     }
-    const Add = (deleteItem, deleteSize) => {
+    const Add = (addItem, addSize) => {
         var temp = cartList.slice(0);
         for(var i = 0; i < temp.length; i++){
-            if(temp[i].product.sku == deleteItem && temp[i].size == deleteSize){
+            if(temp[i].product.sku == addItem && temp[i].size == addSize && temp[i].size === addSize && inventory[addItem][temp[i].size] > 0){
                 temp[i].qty += 1;
+                inventory[addItem][temp[i].size] -= 1;
                 setCartList(temp);
                 break;
             }
         }
     }
-    const Sub = (deleteItem, deleteSize) => {
+    const Sub = (subItem, subSize) => {
         var temp = cartList.slice(0);
         for(var i = 0; i < temp.length; i++){
-            if(temp[i].product.sku == deleteItem && temp[i].size == deleteSize){
+            if(temp[i].product.sku == subItem && temp[i].size == subSize){
                 if (temp[i].qty > 1){
                     temp[i].qty -= 1;
+                    inventory[subItem][temp[i].size] += 1;
                     setCartList(temp);
                     break;
                 }
                 else{
+                    inventory[subItem][temp[i].size] += 1;
                     temp.splice(i,1);
                     setCartList(temp);
                     break;

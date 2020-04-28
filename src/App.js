@@ -85,6 +85,8 @@ const App = () => {
   const products = Object.values(data);
   const [open, setOpen] = React.useState(false);
   const [cartList, setCartList] = useState([]);
+  const [inventory, setInv] = useState({});
+
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -102,6 +104,15 @@ const App = () => {
     sum = sum.toFixed(2);
     return sum;
 };
+  
+  useEffect(() => {
+    const fetchInv = async () => {
+      const response = await fetch('./data/inventory.json');
+      const json = await response.json();
+      setInv(json);
+    };
+    fetchInv();
+  },[]);
   useEffect(() => {
     const fetchProducts = async () => {
       const response = await fetch('./data/products.json');
@@ -144,7 +155,7 @@ const App = () => {
       >
         <div className={classes.drawerHeader} />
         <React.Fragment>
-          <CardList products={products} cartList={cartList} setCartList={setCartList}/>
+          <CardList products={products} cartList={cartList} setCartList={setCartList} inventory={inventory}/>
         </React.Fragment>
     </main>
     <Drawer
@@ -163,7 +174,7 @@ const App = () => {
         </div>
         <Divider />
         <React.Fragment>
-            <ShoppingCart cartList={cartList} setCartList={setCartList}/>
+            <ShoppingCart cartList={cartList} setCartList={setCartList} inventory={inventory}/>
         </React.Fragment>
         <Divider />
         <Container fixed>

@@ -26,26 +26,36 @@ const useStyles = makeStyles({
 });
 
 
-export default function MediaCard({product, cartList, setCartList}) {
+export default function MediaCard({product, cartList, setCartList, inventory}) {
   const classes = useStyles();
   const [productSize, setProductSize] = useState('S');
+  const [click, setClick] = useState(false);
+
+  const haveSize = (size) =>{
+    return inventory[product.sku][size] > 0;
+};
   
-  const handleSizeClick = (size) => {
+  
+  const sizeClick = (size) => {
+    setClick(true);
     setProductSize(size);
 };
-  const handleAddCart = () => {
-    let tempCart = cartList.slice(0);
-    let count;
+  const addCart = () => {
+    var tempCart = cartList.slice(0);
+    var count;
     for(count = 0; count < tempCart.length; count++){
         if (tempCart[count].product.sku === product.sku && tempCart[count].size === productSize) {
             tempCart[count].qty += 1;
+            inventory[product.sku][productSize] -= 1;
             break;
         }
     }
     if(count===tempCart.length){
+        inventory[product.sku][productSize] -= 1;
         tempCart.push({product : product, qty : 1, size : productSize});
     }
     setCartList(tempCart);
+    setClick(false);
 };
 
 
@@ -68,21 +78,21 @@ export default function MediaCard({product, cartList, setCartList}) {
       </CardActionArea>
       <CardActions>
         <Grid container justify="center">
-                <Button size="small" color="primary" onClick={() => handleSizeClick('S')}>
+                <Button size="small" color="primary" onClick={() => sizeClick('S')} disabled={!haveSize("S")}>
                 S
                 </Button>
-                <Button size="small" color="primary" onClick={() => handleSizeClick('M')}>
+                <Button size="small" color="primary" onClick={() => sizeClick('M')} disabled={!haveSize("M")}>
                 M
                 </Button>
-                <Button size="small" color="primary" onClick={() => handleSizeClick('L')}>
+                <Button size="small" color="primary" onClick={() => sizeClick('L')} disabled={!haveSize("L")}>
                 L
                 </Button>
-                <Button size="small" color="primary" onClick={() => handleSizeClick('XL')}>
+                <Button size="small" color="primary" onClick={() => sizeClick('XL')} disabled={!haveSize("XL")}>
                 XL
                 </Button>
 
         <Grid container justify="center" >
-                <Button variant="contained" color="primary" disableElevation centered={true} onClick={handleAddCart}>
+                <Button variant="contained" color="primary" disableElevation centered={true} onClick={addCart} disabled={!click}>
                 ADD TO CART
                 </Button>
             </Grid>

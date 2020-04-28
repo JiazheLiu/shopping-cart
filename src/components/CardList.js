@@ -4,7 +4,7 @@ import Container from '@material-ui/core/Container';
 import Card from "./Card"
  
  
-export default function CardList({products, cartList, setCartList}) {
+export default function CardList({products, cartList, setCartList, inventory}) {
     return (
     
     <React.Fragment>
@@ -12,7 +12,7 @@ export default function CardList({products, cartList, setCartList}) {
             <Grid container spacing={2} direction="row">
                 {products.map(product =>
                     <Grid item xs={3} key={product.sku + product.size}>
-                        <Card product={product} cartList={cartList} setCartList={setCartList}/>
+                        <Card product={product} cartList={cartList} setCartList={setCartList} inventory={inventory}/>
                         </Grid>)
                     }
             </Grid>
