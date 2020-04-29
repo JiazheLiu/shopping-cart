@@ -15,7 +15,20 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Container from '@material-ui/core/Container';
+import firebase from 'firebase/app';
+import 'firebase/database';
+const firebaseConfig = {
+  apiKey: "AIzaSyAY_zNGoReDzJPzXIh5lD2fkLGoW8no1ic",
+  authDomain: "shopping-cart-f263f.firebaseapp.com",
+  databaseURL: "https://shopping-cart-f263f.firebaseio.com",
+  projectId: "shopping-cart-f263f",
+  storageBucket: "shopping-cart-f263f.appspot.com",
+  messagingSenderId: "265080170348",
+  appId: "1:265080170348:web:65916bc68c0ff7492bb549"
+};
 
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database().ref();
 const drawerWidth = 400;
 
 const useStyles = makeStyles((theme) => ({
@@ -106,18 +119,33 @@ const App = () => {
 };
   
   useEffect(() => {
-    const fetchInv = async () => {
-      const response = await fetch('./data/inventory.json');
-      const json = await response.json();
-      setInv(json);
+    const handleData = snap => {
+      setInv(snap.val());
     };
-    fetchInv();
+    db.on('value', handleData, error => alert(error));
+    // document.write(inventory)
+    return () => { db.off('value', handleData); };
+    // const fetchInv = async () => {
+    // const response = await fetch('./data/inventory.json');
+    // const json = await response.json();
+    // setInv(json);
+    // // };
+    // fetchInv();
   },[]);
   useEffect(() => {
     const fetchProducts = async () => {
       const response = await fetch('./data/products.json');
       const json = await response.json();
-      setData(json);
+      const handleData = snap => {
+        setInv(snap.val());
+        setData(json);
+      };
+      
+      db.on('value', handleData, error => alert(error));
+      // document.write(inventory)
+      return () => { db.off('value', handleData); };
+      // const fetchInv = async () => {
+      // setData(json);
     };
     fetchProducts();
   }, []);
