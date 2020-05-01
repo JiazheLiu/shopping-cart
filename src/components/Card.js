@@ -9,6 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+
 const useStyles = makeStyles({
   root: {
     //  maxWidth:,
@@ -16,8 +17,11 @@ const useStyles = makeStyles({
     flexGrow: 1,
   },
   media: {
-    // width: '100%',
-    height: 400,
+        
+        
+        height:400,
+        // maxWidth: 60,
+        // margin: '5px 5px',
   },
 //   item: {
 //     // padding: theme.spacing(1),

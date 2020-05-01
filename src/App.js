@@ -17,6 +17,10 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Container from '@material-ui/core/Container';
 import firebase from 'firebase/app';
 import 'firebase/database';
+import 'firebase/auth';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import { Button, Message, Title } from "rbx";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAY_zNGoReDzJPzXIh5lD2fkLGoW8no1ic",
   authDomain: "shopping-cart-f263f.firebaseapp.com",
@@ -29,6 +33,17 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref();
+
+const uiConfig = {
+  signInFlow: 'popup',
+  signInOptions: [
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID
+  ],
+  callbacks: {
+    signInSuccessWithAuthResult: () => false
+  }
+};
+
 const drawerWidth = 400;
 
 const useStyles = makeStyles((theme) => ({
@@ -99,7 +114,26 @@ const App = () => {
   const [open, setOpen] = React.useState(false);
   const [cartList, setCartList] = useState([]);
   const [inventory, setInv] = useState({});
+  const [user, setUser] = useState(null);
 
+  
+  const Welcome = ({ user }) => (
+    <Message color="info">
+      <Message.Header>
+        Welcome, {user.displayName}
+        <Button primary onClick={() => firebase.auth().signOut()}>
+          Log out
+        </Button>
+      </Message.Header>
+    </Message>
+  );
+
+  const SignIn = () => (
+    <StyledFirebaseAuth
+      uiConfig={uiConfig}
+      firebaseAuth={firebase.auth()}
+    />
+  );
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -150,6 +184,10 @@ const App = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(setUser);
+  }, []);
+
   return (
     // <ul>
     //   {products.map(product => <li key={product.sku}>{product.title}</li>)}
@@ -165,6 +203,9 @@ const App = () => {
           <Typography variant="h6" noWrap className={classes.title}>
             MAX MALL
           </Typography>
+          <React.Fragment>
+              { user ? <Welcome user={ user } /> : <SignIn /> }
+          </React.Fragment>
           <IconButton
             color="inherit"
             aria-label="open drawer"
