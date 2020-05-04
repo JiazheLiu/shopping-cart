@@ -34,15 +34,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref();
 
-const uiConfig = {
-  signInFlow: 'popup',
-  signInOptions: [
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID
-  ],
-  callbacks: {
-    signInSuccessWithAuthResult: () => false
-  }
-};
+
 
 const drawerWidth = 400;
 
@@ -112,10 +104,33 @@ const App = () => {
   const theme = useTheme();
   const products = Object.values(data);
   const [open, setOpen] = React.useState(false);
-  const [cartList, setCartList] = useState([]);
+  const [cartList, setCart] = useState([]);
   const [inventory, setInv] = useState({});
   const [user, setUser] = useState(null);
+  const uid = user? user.uid : null;
 
+  const uiConfig = {
+    signInFlow: 'popup',
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+      signInSuccessWithAuthResult: (result) =>{
+        db.child('cart').child(result.user.uid).update(cartList);
+        
+        return false;
+      } 
+    }
+  };
+  const setCartList = (data) => {
+    if(uid) {
+        setCart(data);
+        db.child('cart').child(uid).set(data);
+    }
+    else{
+        setCart(data);
+    }
+};
   
   const Welcome = ({ user }) => (
     <Message color="info">
@@ -138,6 +153,10 @@ const App = () => {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+
+  const handleUp = () =>{
+    setCart([]);
+  }
 
   const handleDrawerClose = () => {
     setOpen(false);
@@ -186,7 +205,7 @@ const App = () => {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(setUser);
-  }, []);
+  }, [user]);
 
   return (
     // <ul>
@@ -250,6 +269,9 @@ const App = () => {
         <Typography align="left" variant="h6" noWrap>
             Total $ : {totalAmount(cartList)}
           </Typography>
+        <button onClick={handleUp}>
+          update cart
+        </button>
         </Container>
       </Drawer> 
 
